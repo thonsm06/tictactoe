@@ -1,0 +1,16 @@
+.grid-container {
+    background-color: lightgrey;
+    max-width: max-content;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid black;
+}
+[class="grid"] {
+    width: 128px;
+    height: 128px;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+}
