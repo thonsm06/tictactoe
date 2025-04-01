@@ -15,7 +15,6 @@ function createPlayer(name) {
     return {user};
 };
 
-console.log(createPlayer("Smith"));
 
 gameLoop = (function () {
     const playerTurn = (selection_x, selection_y) => [selection_x, selection_y];
@@ -36,6 +35,7 @@ function getComputerMove() {
     if (gameBoard.board.includes(0) === false) {return -1};
     gameBoard.board[roll] = 2;
     grids[roll].textContent = "O";//mark box with user selection
+    checkLine(roll);
     return roll;
 }
 const row1 = [0, 1, 2];
@@ -46,30 +46,57 @@ const col2 = [1, 4, 7];
 const col3 = [2, 5, 8];
 const tl = [0, 4, 8];
 const tr = [2, 4, 6];
-function checkMove(lastUser) { //run this after making a move
-    const board = gameBoard.board;
-    checkLine(board[0], board[1], board[2]);
-    if (board[0] === board[1] && board[0] === board[2] && board[0] !== 0 || 
-        board[3] === board[4] && board[3] === board[5] && board[3] !== 0 || 
-        board[6] === board[7] && board[6] === board[8] && board[6] !== 0 || 
-        board[0] === board[3] && board[0] === board[6] && board[0] !== 0 ||
-        board[1] === board[4] && board[1] === board[7] && board[1] !== 0 ||
-        board[2] === board[5] && board[2] === board[8] && board[2] !== 0 || 
-        board[0] === board[4] && board[0] === board[8] && board[0] !== 0 ||
-        board[2] === board[4] && board[2] === board[6] && board[2] !== 0) {
-            //declare winner
-            console.log(`Winner is ${lastUser}`);
-            //run winner code here
 
-        }
+function getLinesToCheck(grid) {
+    switch(grid) {
+        case "0":
+            return [row1, col1, tl];
+        case "1":
+            return [row1, col2];
+        case "2":
+            return [row1, tr, col3];
+        case "3":
+            return [row2, col1];
+        case "4":
+            return [row2, col2, tl, tr];
+        case "5":
+            return [row2, col3];
+        case "6":
+            return [row3, col1, tr];
+        case "7":
+            return [row3, col2];
+        case "8":
+            return [row3, col3, tl];
+    }
 }
+
+
+// function checkMove(lastUser) { //run this after making a move
+//     const board = gameBoard.board;
+//     //checkLine(board[0], board[1], board[2]);
+//     if (board[0] === board[1] && board[0] === board[2] && board[0] !== 0 || 
+//         board[3] === board[4] && board[3] === board[5] && board[3] !== 0 || 
+//         board[6] === board[7] && board[6] === board[8] && board[6] !== 0 || 
+//         board[0] === board[3] && board[0] === board[6] && board[0] !== 0 ||
+//         board[1] === board[4] && board[1] === board[7] && board[1] !== 0 ||
+//         board[2] === board[5] && board[2] === board[8] && board[2] !== 0 || 
+//         board[0] === board[4] && board[0] === board[8] && board[0] !== 0 ||
+//         board[2] === board[4] && board[2] === board[6] && board[2] !== 0) {
+//             //declare winner
+//             console.log(`Winner is ${lastUser}`);
+//             //run winner code here
+
+//         }
+// }
 
 function checkLine(line) {
     const board = gameBoard.board;
-    if (board[0] !== 0 && board[0] === board[1] && board[0] === board[2]) {
-        console.log("winner");
-    }
+    console.log(board);
+    if (board[line[0]] !== 0 && board[line[0]] === board[line[1]] && board[line[0]] === board[line[2]]) {
+        return 1
+    } else return 0;
 }
+
 function displayController(){
     //display board
 
@@ -78,17 +105,26 @@ function displayController(){
 const gridContainer = document.querySelector(".grid-container");
 gridContainer.addEventListener("click", (event => {
     const grid = event.target;
+    const gridID = grid.getAttribute("data-id");
     //set user selection
-    if (grid.getAttribute("value") == "unmarked") {
-        grid.textContent = "X";//mark box with user selection
-        grid.setAttribute("value", "marked"); //avoid checking same box again
-        gameBoard.board[grid.getAttribute("data-id")] = 1;
-        checkLine(gameBoard.board[grid.getAttribute("data-id")]);
-        checkMove("Player");
-        if (getComputerMove() === -1) {
-            //endgame
+    if (gameBoard.board[gridID] === 0) {
+        gameBoard.board[gridID] = 1;
+        grid.textContent = "X";
+        const linesToCheck = getLinesToCheck(gridID);
+        console.log(linesToCheck);
+        for(let i = 0; i < linesToCheck.length; i++) {
+            if (checkLine(linesToCheck[i]) === 1) {
+                //winner 
+            } else {
+                if (gameBoard.board.includes(0)) {
+                    //keep playing
+
+                } else {
+                    //end in tie
+
+                }
+            }
         }
-        checkMove("Computer");
     }
 }));
 
