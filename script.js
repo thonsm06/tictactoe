@@ -11,6 +11,7 @@ function resetBoard() {
 }
 
 const grids = document.querySelectorAll(".grid");
+
 function createPlayer(name) {
     const user = name;
     const selection = function() {
@@ -142,13 +143,19 @@ function getComputerMove() {
             console.log("Your Turn");
         } else {
             console.log("End Round");
+            
         }
     }
     return roll;
 }
 function pickFirstPlayer() {
-
+    const roll = Math.round(Math.random());
+    console.log(roll);
+    if (roll === 1) {
+        getComputerMove();
+    }
 }
+pickFirstPlayer();
 
 function trackScore() {
 
