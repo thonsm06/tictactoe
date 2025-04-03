@@ -1,3 +1,12 @@
+playerScore = 0;
+computerScore = 0;
+updateScore(); //initialize score
+function updateScore() {
+    const score1 = document.querySelector(".score.player1");
+    score1.textContent = `Player Score: ${playerScore}`;
+    const score2 = document.querySelector(".score.player2");
+    score2.textContent = `Computer Score:  ${computerScore}`;
+}
 const gameBoard = (function () {
     const board = [
             0, 0, 0,
@@ -109,6 +118,8 @@ gridContainer.addEventListener("click", (event => {
         grid.textContent = "X";
         if (checkLine(gridID)) {
             console.log("You Win!");
+            playerScore++;
+            updateScore();
             restart();
         } else {
             if (gameBoard.board.includes(0)) {
@@ -137,6 +148,9 @@ function getComputerMove() {
     grids[roll].textContent = "O";//mark box with user selection
     if (checkLine(roll.toString())) {
         console.log("Computer Wins!");
+        computerScore++;
+        updateScore();
+        restart();
     } else {
         if (gameBoard.board.includes(0)) {
             //player turn
@@ -153,15 +167,12 @@ function pickFirstPlayer() {
     console.log(roll);
     if (roll === 1) {
         getComputerMove();
-    }
+    } 
 }
 pickFirstPlayer();
 
+
 function trackScore() {
-
-}
-
-function resetGame() {
 
 }
 
