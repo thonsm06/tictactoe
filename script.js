@@ -17,27 +17,15 @@ function createPlayer(name) {
 
 
 gameLoop = (function () {
+    //track turns
+
     const playerTurn = (selection_x, selection_y) => [selection_x, selection_y];
     const computerTurn = (selection_x, selection_y) => [selection_x, selection_y];
 
     return {playerTurn, computerTurn};
 })();
 
-function getComputerMove() {
-    let roll = 0;
-    let val = -1;
-    const count = 0;
-    do {
-        roll = Math.floor(Math.random() * 9);
-        val = gameBoard.board[roll];
-        if (count === 10) break;
-    } while (val !== 0);
-    if (gameBoard.board.includes(0) === false) {return -1};
-    gameBoard.board[roll] = 2;
-    grids[roll].textContent = "O";//mark box with user selection
-    checkLine(roll);
-    return roll;
-}
+
 const row1 = [0, 1, 2];
 const row2 = [3, 4, 5];
 const row3 = [6, 7, 8];
@@ -89,12 +77,16 @@ function getLinesToCheck(grid) {
 //         }
 // }
 
-function checkLine(line) {
+function checkLine(gridID) {
     const board = gameBoard.board;
-    console.log(board);
-    if (board[line[0]] !== 0 && board[line[0]] === board[line[1]] && board[line[0]] === board[line[2]]) {
-        return 1
-    } else return 0;
+    let lineArray = getLinesToCheck(gridID);
+    for (let i = 0; i < lineArray.length; i++) {
+        let line = lineArray[i];
+        if (board[line[0]] !== 0 && board[line[0]] === board[line[1]] && board[line[0]] === board[line[2]]) {
+            return 1;
+        }
+    }
+    return 0; //if winning move wasn't found, return 0 to keep going
 }
 
 function displayController(){
@@ -110,24 +102,44 @@ gridContainer.addEventListener("click", (event => {
     if (gameBoard.board[gridID] === 0) {
         gameBoard.board[gridID] = 1;
         grid.textContent = "X";
-        const linesToCheck = getLinesToCheck(gridID);
-        console.log(linesToCheck);
-        for(let i = 0; i < linesToCheck.length; i++) {
-            if (checkLine(linesToCheck[i]) === 1) {
-                //winner 
+        if (checkLine(gridID)) {
+            console.log("You Win!");
+        } else {
+            if (gameBoard.board.includes(0)) {
+                console.log("Computer Turn")
+                getComputerMove();
+                
             } else {
-                if (gameBoard.board.includes(0)) {
-                    //keep playing
-
-                } else {
-                    //end in tie
-
-                }
+                console.log("End Round")
             }
         }
     }
 }));
 
+function getComputerMove() {
+    let roll = 0;
+    let val = -1;
+    const count = 0;
+    do {
+        roll = Math.floor(Math.random() * 9);
+        val = gameBoard.board[roll];
+        if (count === 10) break;
+    } while (val !== 0);
+    //if (gameBoard.board.includes(0) === false) {return -1};
+    gameBoard.board[roll] = 2;
+    grids[roll].textContent = "O";//mark box with user selection
+    if (checkLine(roll.toString())) {
+        console.log("Computer Wins!");
+    } else {
+        if (gameBoard.board.includes(0)) {
+            //player turn
+            console.log("Your Turn");
+        } else {
+            console.log("End Round");
+        }
+    }
+    return roll;
+}
 function pickFirstPlayer() {
 
 }
