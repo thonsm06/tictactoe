@@ -72,25 +72,6 @@ function getLinesToCheck(grid) {
     }
 }
 
-
-// function checkMove(lastUser) { //run this after making a move
-//     const board = gameBoard.board;
-//     //checkLine(board[0], board[1], board[2]);
-//     if (board[0] === board[1] && board[0] === board[2] && board[0] !== 0 || 
-//         board[3] === board[4] && board[3] === board[5] && board[3] !== 0 || 
-//         board[6] === board[7] && board[6] === board[8] && board[6] !== 0 || 
-//         board[0] === board[3] && board[0] === board[6] && board[0] !== 0 ||
-//         board[1] === board[4] && board[1] === board[7] && board[1] !== 0 ||
-//         board[2] === board[5] && board[2] === board[8] && board[2] !== 0 || 
-//         board[0] === board[4] && board[0] === board[8] && board[0] !== 0 ||
-//         board[2] === board[4] && board[2] === board[6] && board[2] !== 0) {
-//             //declare winner
-//             console.log(`Winner is ${lastUser}`);
-//             //run winner code here
-
-//         }
-// }
-
 function checkLine(gridID) {
     const board = gameBoard.board;
     let lineArray = getLinesToCheck(gridID);
@@ -112,7 +93,6 @@ const gridContainer = document.querySelector(".grid-container");
 gridContainer.addEventListener("click", (event => {
     const grid = event.target;
     const gridID = grid.getAttribute("data-id");
-    //set user selection
     if (gameBoard.board[gridID] === 0) {
         gameBoard.board[gridID] = 1;
         grid.textContent = "X";
@@ -138,14 +118,16 @@ function getComputerMove() {
     let roll = 0;
     let val = -1;
     const count = 0;
+
     do {
         roll = Math.floor(Math.random() * 9);
         val = gameBoard.board[roll];
         if (count === 10) break;
     } while (val !== 0);
-    //if (gameBoard.board.includes(0) === false) {return -1};
+
     gameBoard.board[roll] = 2;
     grids[roll].textContent = "O";//mark box with user selection
+   
     if (checkLine(roll.toString())) {
         console.log("Computer Wins!");
         computerScore++;
@@ -162,6 +144,7 @@ function getComputerMove() {
     }
     return roll;
 }
+
 function pickFirstPlayer() {
     const roll = Math.round(Math.random());
     console.log(roll);
@@ -171,10 +154,6 @@ function pickFirstPlayer() {
 }
 pickFirstPlayer();
 
-
-function trackScore() {
-
-}
 
 function restart() {
     gameBoard.board = resetBoard();
