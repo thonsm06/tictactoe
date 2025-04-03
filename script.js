@@ -6,6 +6,10 @@ const gameBoard = (function () {
         ];
     return {board};
 })(); 
+function resetBoard() {
+    return[0,0,0,0,0,0,0,0,0];
+}
+
 const grids = document.querySelectorAll(".grid");
 function createPlayer(name) {
     const user = name;
@@ -104,6 +108,7 @@ gridContainer.addEventListener("click", (event => {
         grid.textContent = "X";
         if (checkLine(gridID)) {
             console.log("You Win!");
+            restart();
         } else {
             if (gameBoard.board.includes(0)) {
                 console.log("Computer Turn")
@@ -111,6 +116,7 @@ gridContainer.addEventListener("click", (event => {
                 
             } else {
                 console.log("End Round")
+                
             }
         }
     }
@@ -150,4 +156,12 @@ function trackScore() {
 
 function resetGame() {
 
+}
+
+function restart() {
+    gameBoard.board = resetBoard();
+    const grids = document.querySelectorAll(".grid");
+    for (const grid of grids) {
+        grid.textContent = "";
+    }
 }
